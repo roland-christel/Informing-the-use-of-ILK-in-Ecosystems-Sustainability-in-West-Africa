@@ -1,0 +1,2 @@
+sheet "dataProcessed" : remove irrelevant colonnes and rename columns; remove the first row from the RawData (data is senankpon's trial after first deploymeny of the questionnaire)
+sheet "SEC" fields need for the socioeconomic characterictics analysis 
