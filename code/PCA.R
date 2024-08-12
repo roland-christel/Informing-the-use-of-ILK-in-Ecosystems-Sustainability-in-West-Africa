@@ -88,3 +88,73 @@ text(suppl_coord[7,1], suppl_coord[7,2], labels = rownames(suppl_coord)[7],
      pos = 2, col = "blue", cex = 0.8)
 text(suppl_coord[8,1], suppl_coord[8,2], labels = rownames(suppl_coord)[8], 
      pos = 3, col = "blue", cex = 0.8)
+
+
+##### Using Plot ly 
+
+library(plotly)
+
+# Assume `pca_result` is already calculated as per your initial code
+
+# Extract coordinates
+var_coord <- round(pca_result$var$coord[, 1:2], 2)
+suppl_coord <- round(pca_result$quali.sup$coord[, 1:2], 2)
+
+# Set threshold and identify significant variables
+seuil <- 100 / nrow(pca_result$var$contrib)
+moda <- which(pca_result$var$contrib[, 1] > seuil | pca_result$var$contrib[, 2] > seuil)
+
+# Filter significant variable coordinates
+var_coord_filtered <- var_coord[moda, ]
+
+# Plot using Plotly
+plot <- plot_ly() %>%
+  # Add active variables (in red)
+  add_text(x = var_coord_filtered[, 1], y = var_coord_filtered[, 2],
+           text = rownames(var_coord_filtered),
+           textposition = 'top middle',
+           mode = 'text',
+           textfont = list(color = 'red', size = 12)) %>%
+  # Add grid lines
+  add_segments(x = -1.2, xend = 1.2, y = 0, yend = 0, line = list(dash = 'dot', color = 'gray')) %>%
+  add_segments(x = 0, xend = 0, y = -1.2, yend = 1.2, line = list(dash = 'dot', color = 'gray')) %>%
+  # Add supplementary variables (grouped by symbol type)
+  add_trace(x = suppl_coord[1:2, 1], y = suppl_coord[1:2, 2],
+            text = rownames(suppl_coord)[1:2],
+            mode = 'markers+text',
+            textposition = 'top right',
+            marker = list(symbol = 'triangle-up', color = 'blue', size = 10),
+            textfont = list(color = 'blue', size = 10)) %>%
+  add_trace(x = suppl_coord[3:4, 1], y = suppl_coord[3:4, 2],
+            text = rownames(suppl_coord)[3:4],
+            mode = 'markers+text',
+            textposition = 'top right',
+            marker = list(symbol = 'x', color = 'blue', size = 10),
+            textfont = list(color = 'blue', size = 10)) %>%
+  add_trace(x = suppl_coord[5:8, 1], y = suppl_coord[5:8, 2],
+            text = rownames(suppl_coord)[5:8],
+            mode = 'markers+text',
+            textposition = 'top left',
+            marker = list(symbol = 'circle', color = 'blue', size = 10),
+            textfont = list(color = 'blue', size = 10)) %>%
+  # Set axis labels and contour on all four sides
+  layout(xaxis = list(
+    title = paste0("Dim 1 (", round(pca_result$eig[1, 2], 1), "%)"),
+    range = c(-1.2, 1.2),
+    showline = TRUE,      # Show the axis line
+    linewidth = 2,        # Line width
+    linecolor = 'black',  # Line color
+    mirror = TRUE         # Mirror the axis line to show on all sides
+  ),
+  yaxis = list(
+    title = paste0("Dim 2 (", round(pca_result$eig[2, 2], 1), "%)"),
+    range = c(-1.2, 1.2),
+    showline = TRUE,      # Show the axis line
+    linewidth = 2,        # Line width
+    linecolor = 'black',  # Line color
+    mirror = TRUE         # Mirror the axis line to show on all sides
+  ),
+  showlegend = FALSE)
+
+# Show plot
+plot
