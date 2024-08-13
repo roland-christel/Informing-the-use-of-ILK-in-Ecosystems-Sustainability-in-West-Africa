@@ -19,8 +19,8 @@ if(!require("flextable")){install.packages("flextable")}
 if(!require("purrr")){install.packages("purrr")}
 if(!require("tidyr")){install.packages("tidyr")}
 if(!require("FactoMineR")){install.packages("FactoMineR")}
+if(!require("factoextra")){install.packages("factoextra")}
 
-library(factoextra)
 ## Import data 
 dat <- read_xlsx("processedData/data.xlsx", sheet="fieldsILK")
 
@@ -90,12 +90,9 @@ text(suppl_coord[8,1], suppl_coord[8,2], labels = rownames(suppl_coord)[8],
      pos = 3, col = "blue", cex = 0.8)
 
 
-##### Using Plot ly 
+##### Using Plotly 
 
 library(plotly)
-
-# Assume `pca_result` is already calculated as per your initial code
-
 # Extract coordinates
 var_coord <- round(pca_result$var$coord[, 1:2], 2)
 suppl_coord <- round(pca_result$quali.sup$coord[, 1:2], 2)
@@ -141,18 +138,18 @@ plot <- plot_ly() %>%
   layout(xaxis = list(
     title = paste0("Dim 1 (", round(pca_result$eig[1, 2], 1), "%)"),
     range = c(-1.2, 1.2),
-    showline = TRUE,      # Show the axis line
-    linewidth = 2,        # Line width
-    linecolor = 'black',  # Line color
-    mirror = TRUE         # Mirror the axis line to show on all sides
+    showline = TRUE,      
+    linewidth = 2,        
+    linecolor = 'black',  
+    mirror = TRUE         
   ),
   yaxis = list(
     title = paste0("Dim 2 (", round(pca_result$eig[2, 2], 1), "%)"),
     range = c(-1.2, 1.2),
-    showline = TRUE,      # Show the axis line
-    linewidth = 2,        # Line width
-    linecolor = 'black',  # Line color
-    mirror = TRUE         # Mirror the axis line to show on all sides
+    showline = TRUE,     
+    linewidth = 2,      
+    linecolor = 'black',  
+    mirror = TRUE         
   ),
   showlegend = FALSE)
 
