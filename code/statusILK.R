@@ -75,6 +75,7 @@ print(chi_square_results)
 
 # compute the proportions 
 dff <- df |>  
+            group_by(sex, status, values) |> 
             summarise(
               N = n()
             ) |> 
@@ -124,3 +125,59 @@ x11();  ggplot(dff) +
       hjust = 0, vjust = 1, size = 3.5, 
       inherit.aes = FALSE
     ) 
+
+
+library(plotly)
+
+# Create the base Plotly bar plot
+plot <- plot_ly(
+  data = dff,
+  x = ~values,
+  y = ~percent,
+  color = ~sex,
+  colors = c('black', 'grey'),
+  type = 'bar',
+  text = ~paste0(round(percent, 2), "%"),
+  textposition = 'auto',
+  hoverinfo = 'text',
+  barmode = 'dodge',
+  showlegend = TRUE
+)
+
+# Add layout and customizations
+plot <- plot %>%
+  layout(
+    yaxis = list(
+      title = "Proportion", 
+      tickformat = "%", 
+      titlefont = list(size = 12, color = 'black')
+    ),
+    xaxis = list(
+      title = "", 
+      titlefont = list(size = 12, color = 'black')
+    ),
+    legend = list(
+      title = list(text = "<b>Sex</b>", font = list(size = 12))
+    )
+  )
+
+# Add chi-square annotations manually for each facet
+for (i in 1:nrow(chi_square_results)) {
+  plot <- plot %>% add_annotations(
+    x = chi_square_results$x_pos[i],
+    y = chi_square_results$y_pos[i],
+    text = paste("χ² =", round(chi_square_results$statistic[i], 2), 
+                 "<br>p =", round(chi_square_results$p_value[i], 2)),
+    xref = 'x',
+    yref = 'y',
+    showarrow = FALSE,
+    font = list(size = 12)
+  )
+}
+
+# Add facet wrapping equivalent using subplot
+plot <- subplot(plot, nrows = length(unique(dff$status)), shareX = TRUE, shareY = TRUE)
+
+# Show the plot
+plot
+

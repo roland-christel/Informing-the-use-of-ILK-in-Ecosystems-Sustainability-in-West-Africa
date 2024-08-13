@@ -114,7 +114,7 @@ plot <- plot_ly() %>%
            text = rownames(var_coord_filtered),
            textposition = 'top middle',
            mode = 'text',
-           textfont = list(color = 'red', size = 12)) %>%
+           textfont = list(color = 'black', size = 12)) %>%
   # Add grid lines
   add_segments(x = -1.2, xend = 1.2, y = 0, yend = 0, line = list(dash = 'dot', color = 'gray')) %>%
   add_segments(x = 0, xend = 0, y = -1.2, yend = 1.2, line = list(dash = 'dot', color = 'gray')) %>%
