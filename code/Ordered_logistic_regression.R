@@ -67,10 +67,10 @@ stargazer(tab1$coefficients, type = "text", out="tab1.txt")
 library(car)
 vif(lm(as.numeric(learnILK_Observation) ~ age + sex + educ + residentialStatus + residenceDuration, data=data))
 
-observeModel <- clm(learnILK_Observation ~  age_cag + sex + educ + residentialStatus, 
+observeModel <- clm(learnILK_Observation ~  age_cag + sex + educ + residentialStatus +residenceDuration, 
                    data=data)
 
-summary(observeModel)
+  summary(observeModel)
 
 #step(oberservationModel, direction = "backward" )
 #finalLearnModel<- clm(learnILK_Listen ~ sex + motherTongue,
@@ -79,7 +79,7 @@ tab1 <- summary(observeModel)
 stargazer(tab1$coefficients, type = "text", out="tab1.txt")
 
 ###############################################################################
-practiceModel <- clm(learnILK_Practice ~ age_cag + sex + educ  + residentialStatus, 
+practiceModel <- clm(learnILK_Practice ~ age_cag + sex + educ  + residentialStatus+ residenceDuration, 
                     data=data)
 
 summary(practiceModel)
